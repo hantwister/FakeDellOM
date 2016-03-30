@@ -49,6 +49,9 @@ apply.
 The end result is wanting to have the `fakedell.XMLResponder` servlet accessible at
 `https://[yourIP]:5986/wsman`
 
+Further testing with older versions of OMSA suggest you'll also want this servlet
+accessible at `https://[yourIP]:443/wsman`
+
 The server should be using a self-signed certificate, and when logging into OMSA,
 you'll provide your IP as the remote host to manage, and choose to ignore certificate
 warnings.
