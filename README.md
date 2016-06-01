@@ -13,11 +13,11 @@ I was interested both in:
 2. seeing if new vulnerabilities could result from a "fake" server (managed node) that
    I controlled, which would respond in unexpected and malicious ways to requests by OMSA.
 
-¹Such as: https://www.exploit-db.com/exploits/39486/
+¹Such as https://www.exploit-db.com/exploits/39486/ and at least one XXE
 
 ## What this is
 A little bit of _really quick and dirty_ Java code, intended to listen for requests by
-OMSA, and respond as you desire.  At the time of writing, it only has a response for
+OMSA, and respond as you desire.  When I first wrote this, it only had a response for
 two requests made during the login process, which was enough to get you into² an OMSA
 instance as a "true"³ admin.  If you want to target other kinds of requests, poke
 around the application, see what POST data OMSA sends, get an idea of what is expected
@@ -36,6 +36,10 @@ back, form a response of your choosing, and build that logic into this code.
  Ultimately, the fake managed node responds with `7 + (7 << 16)`.  If your intent is
  to test if OMSA restricts access to certain resources based on user rights, you might
  choose to change this value.
+
+As of May 31st 2016, there's also a response for taking advantage of an XXE. OMSA tries
+to filter malicious-looking URL requests, but doesn't seem to be as paranoid about data
+it gets back from a node being managed.
 
 ## What this is NOT
 This is not at all intended to help you manage your Dell servers, nor any other server.

